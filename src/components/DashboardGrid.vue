@@ -1,12 +1,14 @@
 <script setup lang="ts">
+import { ref } from "vue";
 import { useDashboardStore } from "@/stores/useDashboardStore";
 import OccupancyRow from "./OccupancyRow.vue";
+import RoomPriceRow from "./RoomPriceRow.vue";
 import HolidayRow from "./HolidayRow.vue";
 import EventRow from "./EventRow.vue";
 import WeatherRow from "./WeatherRow.vue";
-import RoomPriceRow from "./RoomPriceRow.vue";
 
 const store = useDashboardStore();
+const showExtraRows = ref(true);
 </script>
 
 <template>
@@ -31,12 +33,26 @@ const store = useDashboardStore();
         </tr>
       </thead>
       <tbody>
-        <OccupancyRow />
-        <HolidayRow />
-        <EventRow />
-        <WeatherRow />
+        <OccupancyRow :show="showExtraRows" @toggle-extras="showExtraRows = !showExtraRows" />
+        <transition-group name="fade-slide" mode="out-in">
+          <HolidayRow v-if="showExtraRows" />
+          <EventRow v-if="showExtraRows" />
+          <WeatherRow v-if="showExtraRows" />
+        </transition-group>
         <RoomPriceRow v-for="room in store.rooms" :key="room.type" :room="room" />
       </tbody>
     </table>
   </div>
 </template>
+
+<style scoped>
+.fade-slide-enter-active,
+.fade-slide-leave-active {
+  transition: all 0.3s ease;
+}
+.fade-slide-enter-from,
+.fade-slide-leave-to {
+  opacity: 0;
+  transform: translateY(-10px);
+}
+</style>
