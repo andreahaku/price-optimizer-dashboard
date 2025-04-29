@@ -10,18 +10,14 @@ const store = useDashboardStore();
 </script>
 
 <template>
-  <div class="overflow-x-auto rounded border bg-white">
-    <table class="min-w-full text-center">
+  <div class="overflow-x-auto rounded border border-gray-200 bg-white shadow-sm">
+    <table class="min-w-full text-center text-sm text-gray-700">
       <thead>
-        <tr class="bg-gray-50">
-          <th class="px-4 py-2 text-left"></th>
-          <th
-            v-for="day in store.days"
-            :key="day.date"
-            class="px-2 py-2 text-xs font-semibold text-gray-600"
-          >
-            <div>{{ day.label }}</div>
-            <div class="text-[10px] text-gray-400">{{ day.date.slice(5) }}</div>
+        <tr class="bg-violet-100">
+          <th class="bg-white px-4 py-2 text-left text-sm font-semibold text-gray-700"></th>
+          <th v-for="day in store.days" :key="day.date" class="border-l border-gray-200 px-2 py-3">
+            <div class="text-xs font-bold text-violet-900">{{ day.label }}</div>
+            <div class="text-[10px] text-gray-500">{{ day.date.slice(5) }}</div>
           </th>
         </tr>
       </thead>

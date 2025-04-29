@@ -3,8 +3,17 @@ defineProps<{ room: { type: string; prices: number[] } }>();
 </script>
 
 <template>
-  <tr>
-    <td class="px-4 py-2 text-left text-sm text-gray-600">{{ room.type }}</td>
-    <td v-for="(price, i) in room.prices" :key="i" class="py-2 text-sm">{{ price }} €</td>
+  <tr class="bg-gray-50 transition hover:bg-gray-200">
+    <td class="px-4 py-6 text-left text-sm font-medium text-gray-700">
+      <span class="inline-block w-4 text-gray-300">└</span>
+      <span class="ml-2">{{ room.type }}</span>
+    </td>
+    <td
+      v-for="(price, i) in room.prices"
+      :key="i"
+      class="border-t border-l border-gray-200 bg-white py-2 text-sm text-gray-800"
+    >
+      {{ price }} €
+    </td>
   </tr>
 </template>
