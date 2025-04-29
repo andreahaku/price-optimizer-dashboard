@@ -3,7 +3,7 @@ defineProps<{ room: { type: string; prices: number[]; occupancy: number[] } }>()
 </script>
 
 <template>
-  <tr class="transition hover:bg-gray-50">
+  <tr class="bg-gray-200 transition hover:bg-gray-400">
     <td class="px-4 py-2 text-left text-sm font-medium text-gray-700">
       <span class="inline-block w-4 text-gray-300">└</span>
       {{ room.type }}

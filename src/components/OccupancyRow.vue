@@ -5,7 +5,11 @@ const store = useDashboardStore();
 
 <template>
   <tr>
-    <td class="px-4 py-2 text-left text-sm font-medium text-gray-600">Occupazione</td>
+    <td
+      class="text-md bg-gray-200 px-4 py-2 text-left text-lg font-bold text-gray-800 hover:bg-gray-300"
+    >
+      Royal Hotel
+    </td>
     <td
       v-for="(day, index) in store.days"
       :key="day.date"
