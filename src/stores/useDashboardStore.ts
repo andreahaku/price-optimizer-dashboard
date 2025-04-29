@@ -28,6 +28,7 @@ export const useDashboardStore = defineStore("dashboard", {
         occupancy: [80, 60, 30, 0, 60, 90, 0],
       },
     ],
+    weatherData: [] as string[],
   }),
   getters: {
     averageOccupancyByDay(state) {
@@ -38,6 +39,34 @@ export const useDashboardStore = defineStore("dashboard", {
         result.push(Math.round(sum / state.rooms.length));
       }
       return result;
+    },
+  },
+  actions: {
+    async fetchWeather(city = "Rovereto,it") {
+      const apiKey = import.meta.env.VITE_OPENWEATHER_API_KEY;
+      const res = await fetch(
+        `https://api.openweathermap.org/data/2.5/weather?q=${city}&units=metric&appid=${apiKey}`,
+      );
+      const data = await res.json();
+
+      const main = data.weather[0].main.toLowerCase();
+      const firstDayWeather = main.includes("cloud")
+        ? "cloudy"
+        : main.includes("rain")
+          ? "rainy"
+          : main.includes("snow")
+            ? "snowy"
+            : main.includes("clear")
+              ? "sunny"
+              : "unknown";
+
+      const possibleWeathers = ["sunny", "cloudy", "rainy", "snowy"];
+      this.weatherData = [
+        firstDayWeather,
+        ...Array(6)
+          .fill(null)
+          .map(() => possibleWeathers[Math.floor(Math.random() * possibleWeathers.length)]),
+      ];
     },
   },
 });
