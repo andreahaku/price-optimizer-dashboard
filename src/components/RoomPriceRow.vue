@@ -4,7 +4,7 @@ defineProps<{ room: { type: string; prices: number[] } }>();
 
 <template>
   <tr class="bg-gray-50 transition hover:bg-gray-200">
-    <td class="px-4 py-6 text-left text-sm font-medium text-gray-700">
+    <td class="border-t border-gray-200 px-4 py-6 text-left text-sm font-medium text-gray-700">
       <span class="inline-block w-4 text-gray-300">└</span>
       <span class="ml-2">{{ room.type }}</span>
     </td>
