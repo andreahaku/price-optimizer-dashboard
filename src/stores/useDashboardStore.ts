@@ -7,7 +7,7 @@ export const useDashboardStore = defineStore("dashboard", {
       { date: "2025-01-02", label: "MAR", holiday: false, event: false, weather: "cloudy" },
       { date: "2025-01-03", label: "MER", holiday: false, event: false, weather: "rainy" },
       { date: "2025-01-04", label: "GIO", holiday: false, event: true, weather: "sunny" },
-      { date: "2025-01-05", label: "VEN", holiday: false, event: false, weather: "cloudy" },
+      { date: "2025-01-05", label: "VEN", holiday: true, event: false, weather: "cloudy" },
       { date: "2025-01-06", label: "SAB", holiday: true, event: false, weather: "snowy" },
       { date: "2025-01-07", label: "DOM", holiday: false, event: true, weather: "cloudy" },
     ],
