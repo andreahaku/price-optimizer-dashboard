@@ -53,13 +53,13 @@ ${allDiffs}
 \`\`\`
 `;
 
-  const response = await openai.createChatCompletion({
+  const response = await openai.chat.completions.create({
     model: "gpt-4",
     messages: [{ role: "user", content: prompt }],
     temperature: 0.4,
   });
 
-  return response.data.choices[0].message.content;
+  return response.choices[0].message.content;
 }
 
 async function submitPullRequestReview(body, commitId) {
