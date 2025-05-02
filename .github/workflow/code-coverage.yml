@@ -1,0 +1,45 @@
+name: Code Coverage Check
+
+on:
+  pull_request:
+    types: [opened, synchronize]
+
+jobs:
+  coverage:
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
+      contents: read
+
+    steps:
+      - name: Checkout PR branch
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: ".nvmrc"
+
+      - name: Install dependencies
+        run: yarn install
+
+      - name: Run tests and generate coverage
+        run: yarn test:unit
+
+      - name: Save PR coverage
+        run: cp coverage/coverage-summary.json pr-coverage.json
+
+      - name: Checkout base branch (main)
+        run: |
+          git fetch origin main
+          git checkout origin/main
+          yarn install
+          yarn test:unit
+          cp coverage/coverage-summary.json base-coverage.json
+
+      - name: Compare coverage
+        run: node .github/scripts/compare-coverage.js
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
