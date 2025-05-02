@@ -44,29 +44,53 @@ export const useDashboardStore = defineStore("dashboard", {
   actions: {
     async fetchWeather(city = "Rovereto,it") {
       const apiKey = import.meta.env.VITE_OPENWEATHER_API_KEY;
+
       const res = await fetch(
-        `https://api.openweathermap.org/data/2.5/weather?q=${city}&units=metric&appid=${apiKey}`,
+        `https://api.openweathermap.org/data/2.5/forecast?q=${city}&units=metric&appid=${apiKey}`,
       );
       const data = await res.json();
 
-      const main = data.weather[0].main.toLowerCase();
-      const firstDayWeather = main.includes("cloud")
-        ? "cloudy"
-        : main.includes("rain")
-          ? "rainy"
-          : main.includes("snow")
-            ? "snowy"
-            : main.includes("clear")
-              ? "sunny"
-              : "unknown";
+      if (!data.list || data.list.length === 0) {
+        console.error("Nessun dato meteo disponibile.");
+        this.weatherData = [];
+        return;
+      }
 
       const possibleWeathers = ["sunny", "cloudy", "rainy", "snowy"];
-      this.weatherData = [
-        firstDayWeather,
-        ...Array(6)
-          .fill(null)
-          .map(() => possibleWeathers[Math.floor(Math.random() * possibleWeathers.length)]),
-      ];
+
+      // OpenWeather API /forecast dà 3h intervals → raggruppiamo per giorno
+      const dailyForecasts: { [date: string]: string[] } = {};
+
+      data.list.forEach((forecast: any) => {
+        const date = forecast.dt_txt.split(" ")[0];
+        const weather = forecast.weather[0].main.toLowerCase();
+        if (!dailyForecasts[date]) {
+          dailyForecasts[date] = [];
+        }
+        dailyForecasts[date].push(weather);
+      });
+
+      const mappedWeather = Object.values(dailyForecasts)
+        .slice(0, 7) // Solo i prossimi 7 giorni
+        .map((weathers) => {
+          const mainWeather = weathers.reduce(
+            (acc, weather) => {
+              acc[weather] = (acc[weather] || 0) + 1;
+              return acc;
+            },
+            {} as Record<string, number>,
+          );
+
+          const mostFrequent = Object.entries(mainWeather).sort((a, b) => b[1] - a[1])[0][0];
+
+          if (mostFrequent.includes("cloud")) return "cloudy";
+          if (mostFrequent.includes("rain")) return "rainy";
+          if (mostFrequent.includes("snow")) return "snowy";
+          if (mostFrequent.includes("clear")) return "sunny";
+          return "unknown";
+        });
+
+      this.weatherData = mappedWeather;
     },
   },
 });
