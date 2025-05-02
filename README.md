@@ -113,3 +113,42 @@ GITHUB_REF=refs/pull/numero_pr/merge
 ```
 
 Assicurati che il token GitHub abbia i permessi necessari per leggere le pull request e scrivere commenti.
+
+# Script di code coverage
+
+Lo script di code coverage automatizza il confronto tra la copertura del codice della base (`main`) e quella della PR corrente usando **Vitest**.
+
+Viene eseguito automaticamente tramite una GitHub Action ogni volta che viene aperta o aggiornata una pull request, così da fornire un feedback immediato sull'impatto delle modifiche sulla copertura dei test.
+
+### Come testarlo localmente
+
+Per testare lo script di confronto coverage in locale:
+
+1. **Esegui i test su `main` e salva la copertura:**
+   ```sh
+   git checkout main
+   yarn test:unit
+   # Salva il file `coverage/coverage-summary.json` prodotto
+   cp coverage/coverage-summary.json /tmp/coverage-main.json
+   ```
+2. **Passa alla branch della PR e riesegui i test:**
+   ```sh
+   git checkout nome_tua_branch_pr
+   yarn test:unit
+   ```
+3. **Esegui lo script di confronto:**
+   ```sh
+   node .github/scripts/compare-coverage.js
+   ```
+
+### Configurazione ambiente
+
+Per il funzionamento locale, assicurati che il file `.env.local` contenga le seguenti variabili (come per lo script `review`):
+
+```env
+GITHUB_TOKEN=il_tuo_token_github
+GITHUB_REPOSITORY=nome_utente/nome_repo
+GITHUB_REF=refs/pull/numero_pr/merge
+```
+
+Il token GitHub deve avere i permessi per leggere le pull request e scrivere commenti.
